@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Management System</title>
+
+<style>
+body,html{
+  margin:0;
+  font-family:Segoe UI,sans-serif;
+  color:#f2f2f2;
+}
+
+/* NAVBAR */
+.navbar{
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  justify-content:space-between;
+  padding:14px 40px;
+  background:rgba(30,30,60,0.85);
+  backdrop-filter:blur(10px);
+}
+.logo{color:#ffd86b;font-size:1.4em;font-weight:700;}
+.nav-links{list-style:none;display:flex;gap:25px;}
+.nav-links a{color:white;text-decoration:none;}
+.nav-links a:hover{color:#ffd86b;}
+
+/* BACKGROUND */
+.bg-slideshow{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+.bg-slideshow img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 2s;
+}
+.bg-slideshow img.active{opacity:1;}
+
+/* HEADER */
+header{text-align:center;padding:80px 20px;}
+header h1{font-size:3em;color:#ffd86b;}
+
+/* TICKER */
+.ticker{
+  background:rgba(255,255,255,0.25);
+  max-width:1100px;
+  margin:auto;
+  padding:12px;
+  border-radius:8px;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.ticker span{
+  display:inline-block;
+  animation:scroll 25s linear infinite;
+}
+@keyframes scroll{
+  from{transform:translateX(100%);}
+  to{transform:translateX(-100%);}
+}
+
+/* MAIN */
+.main{
+  max-width:1200px;
+  margin:40px auto;
+  display:flex;
+  gap:30px;
+  padding:0 20px;
+}
+.container{flex:2;}
+.sidebar{flex:1;}
+
+.section,.sidebar{
+  background:rgba(60,60,100,0.78);
+  padding:30px;
+  border-radius:12px;
+  backdrop-filter:blur(6px);
+  margin-bottom:30px;
+}
+
+h2{
+  color:#ffd86b;
+  border-bottom:2px solid #ffd86b;
+}
+
+/* 👉 Requested change */
+.sidebar h2{
+  color:black;
+  border-bottom:2px solid black;
+}
+
+form input,form button,form select{
+  width:100%;
+  padding:14px;
+  margin:10px 0;
+  border-radius:8px;
+  border:none;
+}
+form input{background:#f9f9f9;}
+form button{
+  background:linear-gradient(90deg,#ffcc66,#ff9966);
+  font-weight:600;
+  cursor:pointer;
+}
+input[type=checkbox]{width:auto;}
+.readonly{background:#ddd;}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:25px;
+  background:rgba(20,20,40,0.9);
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+  <div class="logo">🌟 EventManager</div>
+  <ul class="nav-links">
+    <li><a href="problem.html">Problem</a></li>
+    <li><a href="unique.html">Unique</a></li>
+    <li><a href="application.html">Application</a></li>
+  </ul>
+</nav>
+
+<div class="bg-slideshow">
+  <img src="{{ url_for('static', filename='image1.jpg') }}" class="active">
+  <img src="{{ url_for('static', filename='image2.jpg') }}">
+  <img src="{{ url_for('static', filename='image3.jpg') }}">
+  <img src="{{ url_for('static', filename='image4.jpg') }}">
+  <img src="{{ url_for('static', filename='image5.jpg') }}">
+  <img src="{{ url_for('static', filename='image6.jpg') }}">
+  <img src="{{ url_for('static', filename='image7.jpg') }}">
+  <img src="{{ url_for('static', filename='image8.jpg') }}">
+  <img src="{{ url_for('static', filename='image9.jpg') }}">
+  <img src="{{ url_for('static', filename='image10.jpg') }}">
+</div>
+
+<header>
+  <h1>Event Management System</h1>
+  <p>Algorithmic • Organized • Efficient</p>
+</header>
+
+<div class="ticker">
+<span>
+  No upcoming events scheduled
+</span>
+</div>
+
+<div class="main">
+<div class="container">
+
+<div class="section">
+<h2>Insert Event</h2>
+<form method="post" action="/insert">
+<input name="event_id" id="event_id" class="readonly" readonly placeholder="Event ID">
+<button type="button" onclick="generateID()">Generate Event ID</button>
+<input name="name" placeholder="Event Name" required>
+<input name="loc" placeholder="Location" required>
+<input type="date" name="date" required>
+<input type="number" name="seats" placeholder="Seats Available" required>
+<label>
+  <input type="checkbox" name="upcoming" value="1"> Mark as Upcoming Event
+</label>
+<button>Add Event</button>
+</form>
+</div>
+
+<div class="section">
+<h2>Search Event (By ID)</h2>
+<form action="/search" method="post">
+<input name="event_id" placeholder="Enter Event ID" required>
+<button>Search</button>
+</form>
+</div>
+
+<div class="section">
+<h2>Sort Events</h2>
+<form action="/sort" method="get">
+<select name="criteria">
+<option value="date">Chronological Order</option>
+<option value="seats">Seat Availability</option>
+</select>
+<button>Sort</button>
+</form>
+</div>
+
+</div>
+
+<div class="sidebar">
+<h2>Why This Is Unique</h2>
+<ul>
+<li>Doubly Linked List–based dynamic storage</li>
+<li>Duplicate event prevention logic</li>
+<li>Upcoming events live ticker</li>
+<li>Stable event ID generation</li>
+<li>Backend-driven sorting</li>
+</ul>
+
+<!-- 🔽 OUTPUT AREA (Sidebar) -->
+{% if sidebar_data %}
+<hr>
+<h3 style="color:black;">Output</h3>
+
+{% for row in sidebar_data %}
+  {% if row is string %}
+    <p>{{ row }}</p>
+  {% else %}
+    <p>
+      <strong>{{ row[1] }}</strong><br>
+      ID: {{ row[0] }}<br>
+      {{ row[2] }} | {{ row[3] }}<br>
+      Seats: {{ row[4] }} | Upcoming: {{ row[5] }}
+    </p>
+  {% endif %}
+{% endfor %}
+{% endif %}
+</div>
+</div>
+
+<footer>
+<p>© 2026 Event Management System Project</p>
+<p>Annewsh Dikshit(Project Leader)|Biprodip Biswas|Sudarshan Hansda|Subham Murmu|Pritam Mahato</p>
+</footer>
+
+<script>
+function generateID(){
+  const ts = Date.now().toString().slice(-6);
+  const rnd = Math.floor(Math.random()*90 + 10);
+  document.getElementById("event_id").value = "EVT-" + ts + rnd;
+}
+
+let slides=document.querySelectorAll(".bg-slideshow img");
+let i=0;
+setInterval(()=>{
+  slides[i].classList.remove("active");
+  i=(i+1)%slides.length;
+  slides[i].classList.add("active");
+},3000);
+</script>
+
+</body>
+</html>
