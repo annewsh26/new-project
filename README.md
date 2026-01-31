@@ -74,12 +74,18 @@ C Backend (Doubly Linked List)Event-Management-System/
 ├── static/
 │ ├── image1.jpg
 │ └── image2.jpg
+|__continue upto image 10.jpg
 │
 ├── README.md
-└── requirements.txt
+
 Install Python Dependencies:
+
 pip install flask
+
 Run Flask Application:
+
 python app.py
+
 Open in Browser:
+
 http://127.0.0.1:5000/
